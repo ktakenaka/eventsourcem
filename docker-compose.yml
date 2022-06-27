@@ -3,7 +3,6 @@ version: "3"
 services:
   localstack:
     image: localstack/localstack
-    restart: always
     ports:
       - 4566:4566
     environment:
@@ -12,7 +11,8 @@ services:
       DATA_DIR: /data/localstack
       DOCKER_HOST: unix:///var/run/docker.sock
       INIT_SCRIPTS_PATH: /docker-entrypoint-initaws.d
-      KMS_PROVIDER: local-kms
+      DEBUG: 1
+      LS_LOG: debug
     volumes:
       - "./data/localstack:/data/localstack"
       - "./docker/localstack/docker-entrypoint-initaws.d:/docker-entrypoint-initaws.d"
