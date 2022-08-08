@@ -19,9 +19,13 @@ export AWS_PROFILE=sample
 $ aws sqs create-queue --queue-name sample --endpoint-url=http://localhost:4566
 ```
 
-2. Create or Update function in Lambda
+2. Make zip
 ```
 $ GOOS=linux CGO_ENABLED=0 go build ./main.go && zip main.zip main
+```
+
+3. Create a function in Lambda and confirm if the function is created
+```
 $ aws lambda create-function \
   --endpoint-url=http://localhost:4566 \
   --function-name sample \
@@ -29,27 +33,19 @@ $ aws lambda create-function \
   --runtime go1.x \
   --zip-file fileb://main.zip \
   --role arn:aws:iam::000000000000:role/sample
-```
-
-3. Confirm if the function is created
-```
 $ aws lambda list-functions --endpoint-url http://localhost:4566
 ```
 
-4. Create SQS hook to the function
+4. Create a SQS hook with the function and confirm if the hook is registered
 ```
 $ aws lambda create-event-source-mapping \
   --endpoint-url=http://localhost:4566 \
   --function-name sample \
   --event-source-arn arn:aws:sqs:ap-northeast-1:000000000000:sample
-```
-
-5. Confirm if the hook is registered
-```
 $ aws lambda list-event-source-mappings --endpoint-url http://localhost:4566
 ```
 
-6. Send a message to SQS
+5. Send a message to SQS
 ```
 $ aws sqs send-message \
   --queue-url http://localhost:4566/queue/sample \

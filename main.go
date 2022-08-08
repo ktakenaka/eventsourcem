@@ -9,7 +9,6 @@ import (
 )
 
 func main() {
-	fmt.Println("===== Starting... =====")
 	lambda.Start(func(ctx context.Context, event events.SQSEvent) error {
 		for _, msg := range event.Records {
 			fmt.Printf("%+v\n", msg)
